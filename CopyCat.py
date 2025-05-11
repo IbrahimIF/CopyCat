@@ -27,7 +27,7 @@ def recordAudio():
 
   print("recording start")
   frames = []
-  seconds = 5
+  seconds = 6
 
   for i in range(0, int(RATE / CHUNK * seconds)):    
     data = stream.read(CHUNK)
@@ -71,17 +71,27 @@ def micToText():
       return "none"
 
 
+def processText():
+  text = micToText()
+  if text == "none":
+        return "silence."
+  elif "copy" in text:
+        return "Ok I won't then."
+  else:
+        return text
+
 def textToSpeech():
   print("test")
-  text = micToText()
+  text = processText()
   client = ElevenLabs(
     api_key="sk_d9959509b80a843fcf8baf8fcf1c691da818dadec9274c47", # Defaults to ELEVEN_API_KEY
   )
   
   audio = client.generate(
-    text=text,
+    text=text+".",
     voice="Brian",
   )
+
   
   save(audio, "output.mp3")
   playsound("output.mp3")
