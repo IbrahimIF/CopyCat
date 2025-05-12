@@ -1,13 +1,16 @@
 import pyaudio
 import wave
 import time
-
+import keyboard
 import speech_recognition as sr
+import os
+from dotenv import load_dotenv
 
 from elevenlabs import save
 from elevenlabs.client import ElevenLabs
 from playsound import playsound
 
+load_dotenv()
 
 def recordAudio():
   FORMAT = pyaudio.paInt16
@@ -84,7 +87,7 @@ def textToSpeech():
   print("test")
   text = processText()
   client = ElevenLabs(
-    api_key="sk_d9959509b80a843fcf8baf8fcf1c691da818dadec9274c47", # Defaults to ELEVEN_API_KEY
+    api_key=os.getenv("ELEVENLABS_API_KEY")
   )
   
   audio = client.generate(
@@ -101,3 +104,40 @@ def textToSpeech():
 
 recordAudio()
 textToSpeech()
+
+
+
+"""
+def conversation_loop():
+    print("Starting conversation loop. Press SPACE to stop...")
+    
+    # Give user time to release spacebar if pressed before starting
+    time.sleep(1)
+    
+    while True:
+        # Full conversation cycle
+        recordAudio()
+        textToSpeech()
+        
+        # Check for spacebar press
+        if keyboard.is_pressed('space'):
+            print("\nSpacebar pressed - ending conversation")
+            break
+            
+        # Small delay to prevent CPU overload
+        time.sleep(0.1)
+
+def main():
+    try:
+        conversation_loop()
+    except KeyboardInterrupt:
+        print("\nProgram stopped by user")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    finally:
+        print("Cleaning up...")
+
+if __name__ == "__main__":
+    main()
+"""
+
